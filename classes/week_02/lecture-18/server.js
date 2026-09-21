@@ -2,16 +2,17 @@ const express=require("express");
 const app = express();
 const PORT  = 3000
 
-app.get('/',(req,res) => {
+app.get('/',(req,res,next) => {
     try{
         throw new Error("Something went wrong")    
     }catch(error){
-        res.status(500).json({success:false, message:"Something went wrong"});
+        // res.status(500).json({success:false, message:"Something went wrong"});
+        next(error);
 
     }
 });
 
-app.get("/:id",(req,res) =>{
+app.get("/:id",(req,res,next) =>{
     const id=req.params.id;
     try{
         if(id=="1234"){
@@ -20,11 +21,12 @@ app.get("/:id",(req,res) =>{
             throw new Error("Invalid id");
         }
     }catch(error){
-        res.status(400).json({success:false, message:"error"});
+        // res.status(400).json({success:false, message:"error"});
+        next(error);
     }
 });
 
-app.use((req,res) =>{
+app.use((err,req,res,next) =>{
     res.status(400).json({success:false, message:"Page not found"});
 
 })
