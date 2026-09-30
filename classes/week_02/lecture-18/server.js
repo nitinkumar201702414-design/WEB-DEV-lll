@@ -26,6 +26,8 @@ app.get("/:id",(req,res,next) =>{
     }
 });
 
+
+
 app.use((err,req,res,next) =>{
     res.status(400).json({success:false, message:"Page not found"});
 
