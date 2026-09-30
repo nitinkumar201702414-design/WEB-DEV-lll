@@ -25,11 +25,11 @@ const apiMiddlware=(req,res,next)=>{
 // app.use(apiMiddlware);
 
 
-app.get("/",(req,res)=>{
-    console.log("Request data:",req.data)
-    console.log("Home Page")
-    res.send("Hello from server")
-})
+// app.get("/",(req,res)=>{
+//     console.log("Request data:",req.data)
+//     console.log("Home Page")
+//     res.send("Hello from server")
+// })
 
 app.get("/weather-data",apiMiddlware,(req,res)=>{
     console.log("Weather Data")
