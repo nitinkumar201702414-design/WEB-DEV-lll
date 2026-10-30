@@ -30,6 +30,8 @@ const employeeSchema = new Schema({
         type: String,
         required: true
     }
-})
+},{
+    timestamps: true
+});
 
-module.exports=mongoose.model("employee", employeeSchema);
+module.exports=mongoose.model("employee", employeeSchema,"employee");
