@@ -1,5 +1,7 @@
 const express = require("express");
 const mongoose=require("mongoose");
+const dotenv=require("dotenv");
+dotenv.config();
 const Employee=require("./employee.model.js")
 const app = express();
 const PORT = 3000;
@@ -59,11 +61,11 @@ app.delete("/api/employee/:id", async(req,res)=> {
 
 
 
-mongoose.connect("mongodb://localhost:27017/GoogleDB").then(()=>{
+mongoose.connect(process.env.MONGO_URL).then(()=>{
     console.log("Database Connected");
 }).catch((err)=> {
     console.log(err);
 });
-app.listen(PORT,() =>{
-    console.log(`server is running on http://localhost:${PORT}`);
+app.listen(process.env.PORT,() =>{
+    console.log(`server is running on http://localhost:${process.env.PORT}`);
 });
