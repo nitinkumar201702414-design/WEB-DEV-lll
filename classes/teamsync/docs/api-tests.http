@@ -1,0 +1,85 @@
+# Works with the VS Code "REST Client" extension. Run requests top to bottom.
+# After logging in, paste the accessToken below.
+
+@base = http://localhost:5000/api
+@token = PASTE_ACCESS_TOKEN_HERE
+@projectId = PASTE_PROJECT_ID
+@taskId = PASTE_TASK_ID
+@userId = PASTE_USER_ID
+
+### Health
+GET {{base}}/health
+
+### Register (always becomes role "user")
+POST {{base}}/auth/register
+Content-Type: application/json
+
+{ "name": "Dana Test", "email": "dana@example.com", "password": "Passw0rd!", "confirmPassword": "Passw0rd!" }
+
+### Login as admin  (copy data.accessToken)
+POST {{base}}/auth/login
+Content-Type: application/json
+
+{ "email": "admin@teamsync.com", "password": "Admin@123" }
+
+### Refresh (needs the cookie; easier to test in the browser or Postman with cookies on)
+POST {{base}}/auth/refresh
+
+### Users (admin)
+GET {{base}}/users?limit=20
+Authorization: Bearer {{token}}
+
+### Create project (admin)
+POST {{base}}/projects
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Demo Project", "description": "Testing", "startDate": "2026-11-01", "endDate": "2026-12-31", "status": "active", "members": ["{{userId}}"] }
+
+### List projects
+GET {{base}}/projects
+Authorization: Bearer {{token}}
+
+### Add member
+POST {{base}}/projects/{{projectId}}/members
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "userId": "{{userId}}" }
+
+### Create task (admin)
+POST {{base}}/tasks
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "title": "Write tests", "description": "Cover the API", "project": "{{projectId}}", "assignedTo": "{{userId}}", "priority": "high", "deadline": "2026-12-01" }
+
+### Filter / search / sort tasks
+GET {{base}}/tasks?status=pending&priority=high&search=test&sort=deadline
+Authorization: Bearer {{token}}
+
+### Update status (admin or the assignee)
+PATCH {{base}}/tasks/{{taskId}}/status
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "status": "in-progress" }
+
+### RBAC check: log in as alice, use her token here -> expect 403
+POST {{base}}/projects
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{ "name": "Hack", "startDate": "2026-11-01", "endDate": "2026-12-01" }
+
+### Notifications
+GET {{base}}/notifications
+Authorization: Bearer {{token}}
+
+### Chat history
+GET {{base}}/messages/{{projectId}}
+Authorization: Bearer {{token}}
+
+### Dashboard
+GET {{base}}/dashboard
+Authorization: Bearer {{token}}
